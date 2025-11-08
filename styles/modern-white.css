@@ -1,0 +1,1077 @@
+/**
+ * ============================================================================
+ * BEZPEČNÉ TRASY PLZNĚ - MODERN WHITE ELEGANT DESIGN
+ * ============================================================================
+ * Clean, minimalist, elegant design - Apple/Stripe inspired
+ * Perfect for charts visibility and professional presentation
+ * ============================================================================
+ */
+
+/* ============================================================================
+   DESIGN SYSTEM - Modern White Theme
+   ============================================================================ */
+:root {
+    /* Primary Colors - Clean White Palette */
+    --white: #ffffff;
+    --off-white: #fafafa;
+    --light-gray: #f5f5f7;
+    --gray: #e5e5e7;
+    --medium-gray: #d1d1d6;
+    --dark-gray: #86868b;
+    --text-primary: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --text-tertiary: #86868b;
+    
+    /* Accent Colors - Subtle & Elegant */
+    --accent-blue: #007aff;
+    --accent-blue-light: #5ac8fa;
+    --accent-blue-dark: #0051d5;
+    
+    --accent-green: #34c759;
+    --accent-green-light: #5fe787;
+    --accent-green-dark: #28a745;
+    
+    --accent-red: #ff3b30;
+    --accent-orange: #ff9500;
+    --accent-purple: #af52de;
+    --accent-pink: #ff2d55;
+    
+    /* Chart Colors - Vibrant but Elegant */
+    --chart-blue: #007aff;
+    --chart-green: #34c759;
+    --chart-red: #ff3b30;
+    --chart-orange: #ff9500;
+    --chart-purple: #af52de;
+    --chart-pink: #ff2d55;
+    --chart-teal: #5ac8fa;
+    --chart-yellow: #ffcc00;
+    
+    /* Shadows - Subtle & Modern */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.1);
+    
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    --space-3xl: 4rem;
+    --space-4xl: 6rem;
+    
+    /* Border Radius */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+    
+    /* Typography */
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
+    --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+    
+    /* Transitions */
+    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================================
+   GLOBAL RESET & BASE STYLES
+   ============================================================================ */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: var(--font-sans);
+    background: var(--white);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+h2 {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700;
+}
+
+h3 {
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 600;
+}
+
+h4 {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 600;
+}
+
+p {
+    margin-bottom: var(--space-md);
+    line-height: 1.7;
+    color: var(--text-secondary);
+}
+
+a {
+    color: var(--accent-blue);
+    text-decoration: none;
+    transition: color var(--transition-base);
+}
+
+a:hover {
+    color: var(--accent-blue-dark);
+}
+
+/* Selection */
+::selection {
+    background: var(--accent-blue-light);
+    color: var(--white);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--light-gray);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--medium-gray);
+    border-radius: var(--radius-md);
+    border: 3px solid var(--light-gray);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-gray);
+}
+
+/* ============================================================================
+   CONTAINER & LAYOUT
+   ============================================================================ */
+.container {
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
+}
+
+/* ============================================================================
+   HEADER & NAVIGATION - Clean & Minimal
+   ============================================================================ */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    transition: all var(--transition-base);
+}
+
+header.header-scrolled {
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: var(--shadow-md);
+}
+
+.header-container {
+    max-width: 1400px;
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-lg) var(--space-xl);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    text-decoration: none;
+    transition: opacity var(--transition-base);
+}
+
+.logo:hover {
+    opacity: 0.7;
+}
+
+.logo-icon {
+    font-size: 2rem;
+    filter: grayscale(0);
+    transition: transform var(--transition-base);
+}
+
+.logo:hover .logo-icon {
+    transform: scale(1.05);
+}
+
+.logo-text {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav-list {
+    display: flex;
+    list-style: none;
+    gap: var(--space-2xl);
+    align-items: center;
+}
+
+.nav-link-item {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 1rem;
+    padding: var(--space-sm) 0;
+    position: relative;
+    transition: color var(--transition-base);
+}
+
+.nav-link-item::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-blue);
+    transition: width var(--transition-base);
+}
+
+.nav-link-item:hover {
+    color: var(--text-primary);
+}
+
+.nav-link-item:hover::after,
+.nav-link-item.active::after {
+    width: 100%;
+}
+
+/* ============================================================================
+   HERO SECTION - Clean & Impactful
+   ============================================================================ */
+.hero {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--space-4xl) 0;
+    background: linear-gradient(180deg, var(--white) 0%, var(--off-white) 100%);
+    margin-top: 80px;
+}
+
+.hero .container {
+    max-width: 900px;
+}
+
+.hero h1 {
+    margin-bottom: var(--space-xl);
+    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: fadeInUp 0.8s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-subtitle {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-2xl);
+    font-weight: 400;
+    line-height: 1.6;
+    animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+/* ============================================================================
+   KPI CARDS - Elegant & Clear
+   ============================================================================ */
+.kpi-section {
+    padding: var(--space-4xl) 0;
+    background: var(--white);
+}
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-xl);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.kpi-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2xl);
+    border: 1px solid var(--gray);
+    transition: all var(--transition-base);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition-base);
+}
+
+.kpi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--medium-gray);
+}
+
+.kpi-card:hover::before {
+    transform: scaleX(1);
+}
+
+.kpi-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-lg);
+    display: block;
+    filter: grayscale(0.2);
+    transition: all var(--transition-base);
+}
+
+.kpi-card:hover .kpi-icon {
+    transform: scale(1.1);
+    filter: grayscale(0);
+}
+
+.kpi-value {
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.kpi-label {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.85rem;
+}
+
+.kpi-desc {
+    font-size: 0.95rem;
+    color: var(--text-tertiary);
+    margin-top: var(--space-md);
+    line-height: 1.5;
+}
+
+/* ============================================================================
+   SECTION TITLES - Clean Typography
+   ============================================================================ */
+.section-title {
+    text-align: center;
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: var(--space-3xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    position: relative;
+    padding-bottom: var(--space-lg);
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--accent-blue);
+    border-radius: var(--radius-full);
+}
+
+/* ============================================================================
+   CHARTS SECTION - Perfect Visibility
+   ============================================================================ */
+.charts-section {
+    padding: var(--space-4xl) 0;
+    background: var(--off-white);
+}
+
+.charts-section .container {
+    max-width: 1200px;
+}
+
+.chart-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2xl);
+    border: 1px solid var(--gray);
+    margin-bottom: var(--space-2xl);
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.chart-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--medium-gray);
+}
+
+.chart-title {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    margin-bottom: var(--space-xl);
+    color: var(--text-primary);
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.chart-container {
+    position: relative;
+    height: 400px;
+    width: 100%;
+}
+
+.chart-large {
+    height: 500px;
+}
+
+/* ============================================================================
+   MAP SECTION - Clean & Functional
+   ============================================================================ */
+.map-section {
+    padding: var(--space-4xl) 0;
+    background: var(--white);
+}
+
+.map-section .container {
+    max-width: 1200px;
+}
+
+#map {
+    height: 600px;
+    width: 100%;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    margin-bottom: var(--space-xl);
+    background: #f5f5f7;
+}
+
+/* Темная тема для Leaflet контролов */
+#map .leaflet-control-container {
+    filter: invert(0.9) hue-rotate(180deg);
+}
+
+#map .leaflet-tile-pane {
+    filter: brightness(0.9) contrast(1.1);
+}
+
+.map-controls {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2xl);
+    border: 1px solid var(--gray);
+    margin-bottom: var(--space-xl);
+    box-shadow: var(--shadow-sm);
+}
+
+.map-controls h3 {
+    color: var(--text-primary);
+    margin-bottom: var(--space-lg);
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.control-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.control-group label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.control-group input,
+.control-group select {
+    padding: var(--space-md);
+    border: 1px solid var(--gray);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    transition: all var(--transition-base);
+}
+
+.control-group input:focus,
+.control-group select:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.control-group input::placeholder {
+    color: var(--text-tertiary);
+}
+
+/* ============================================================================
+   BUTTONS - Clean & Modern
+   ============================================================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-xl);
+    background: var(--accent-blue);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
+}
+
+.btn:hover {
+    background: var(--accent-blue-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.35);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-full {
+    width: 100%;
+}
+
+.btn-secondary {
+    background: var(--accent-green);
+    box-shadow: 0 2px 8px rgba(52, 199, 89, 0.25);
+}
+
+.btn-secondary:hover {
+    background: var(--accent-green-dark);
+    box-shadow: 0 4px 12px rgba(52, 199, 89, 0.35);
+}
+
+.btn:disabled,
+.btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn:disabled:hover,
+.btn[disabled]:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
+}
+
+/* ============================================================================
+   MAP LEGEND - Clean Info Display
+   ============================================================================ */
+.map-legend {
+    background: var(--white);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray);
+    box-shadow: var(--shadow-sm);
+}
+
+.map-legend h4 {
+    color: var(--text-primary);
+    margin-bottom: var(--space-lg);
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.legend-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-base);
+}
+
+.legend-item:hover {
+    background: var(--off-white);
+}
+
+.legend-color {
+    width: 32px;
+    height: 20px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.legend-item span {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.legend-item strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.map-legend > p {
+    margin-top: var(--space-lg);
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--gray);
+}
+
+/* ============================================================================
+   FOOTER - Minimal & Clean
+   ============================================================================ */
+footer {
+    background: var(--off-white);
+    padding: var(--space-2xl) 0;
+    border-top: 1px solid var(--gray);
+    margin-top: var(--space-4xl);
+    text-align: center;
+}
+
+.footer-content {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.8;
+}
+
+.footer-content p {
+    margin-bottom: var(--space-sm);
+    color: var(--text-secondary);
+}
+
+.footer-content a {
+    color: var(--accent-blue);
+    transition: color var(--transition-base);
+}
+
+.footer-content a:hover {
+    color: var(--accent-blue-dark);
+}
+
+/* ============================================================================
+   ROUTE INFO - Clean Display
+   ============================================================================ */
+#routeInfo {
+    margin-top: var(--space-lg);
+    padding: var(--space-lg);
+    background: var(--off-white);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--accent-blue);
+}
+
+#routeInfo strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+#routeDetails {
+    margin-top: var(--space-md);
+    color: var(--text-secondary);
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+.text-center {
+    text-align: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================ */
+@media (max-width: 992px) {
+    .header-container {
+        padding: var(--space-md) var(--space-lg);
+    }
+    
+    .kpi-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .control-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .legend-items {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        min-height: 70vh;
+        padding: var(--space-3xl) 0;
+    }
+    
+    #map {
+        height: 450px;
+    }
+    
+    .chart-container {
+        height: 350px;
+    }
+    
+    .chart-large {
+        height: 450px;
+    }
+    
+    .nav-list {
+        gap: var(--space-lg);
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 95%;
+    }
+    
+    .chart-card {
+        padding: var(--space-lg);
+    }
+    
+    .map-controls {
+        padding: var(--space-lg);
+    }
+    
+    #map {
+        height: 400px;
+    }
+    
+    .chart-container {
+        height: 300px;
+    }
+    
+    .chart-large {
+        height: 400px;
+    }
+}
+
+/* ============================================================================
+   ANIMATIONS
+   ============================================================================ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.6s ease;
+}
+
+/* ============================================================================
+   ACCESSIBILITY
+   ============================================================================ */
+*:focus-visible {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================================================
+   PRINT STYLES
+   ============================================================================ */
+@media print {
+    header,
+    footer,
+    .btn {
+        display: none !important;
+    }
+    
+    body {
+        font-size: 12pt;
+    }
+}
+
+/* ============================================================================
+   MARKER CLUSTERS - Кастомные стили для группировки фонарей
+   ============================================================================ */
+.marker-cluster-small {
+    background-color: rgba(255, 193, 7, 0.6);
+}
+.marker-cluster-small div {
+    background-color: rgba(255, 193, 7, 0.8);
+}
+
+.marker-cluster-medium {
+    background-color: rgba(255, 152, 0, 0.6);
+}
+.marker-cluster-medium div {
+    background-color: rgba(255, 152, 0, 0.8);
+}
+
+.marker-cluster-large {
+    background-color: rgba(255, 87, 34, 0.6);
+}
+.marker-cluster-large div {
+    background-color: rgba(255, 87, 34, 0.8);
+}
+
+.marker-cluster {
+    background-clip: padding-box;
+    border-radius: 50%;
+}
+.marker-cluster div {
+    width: 30px;
+    height: 30px;
+    margin-left: 5px;
+    margin-top: 5px;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 13px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.marker-cluster span {
+    line-height: 30px;
+}
+
+/* Анимация при наведении */
+.marker-cluster:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+/* ============================================================================
+   CUSTOM MARKERS - Красивые pin-маркеры
+   ============================================================================ */
+.custom-marker {
+    background: transparent !important;
+    border: none !important;
+}
+
+.leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.leaflet-popup-content {
+    margin: 12px 16px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* ============================================================================
+   MAP OVERLAY CONTROLS - Floating на карте
+   ============================================================================ */
+.map-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+    overflow: hidden;
+}
+
+.map-overlay-controls {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    border: none;
+    max-width: 420px;
+    width: calc(100% - 40px);
+}
+
+.map-overlay-controls h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.map-overlay-buttons {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    display: flex;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    padding: 1rem 1.5rem;
+    border-radius: 50px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    border: none;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.map-overlay-info {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    border: none;
+    max-width: 350px;
+}
+
+#map-fullscreen {
+    height: 100vh !important;
+    border-radius: 0 !important;
+}
+
+@media (max-width: 768px) {
+    .map-overlay-controls {
+        max-width: calc(100% - 40px);
+        left: 20px;
+        right: 20px;
+    }
+    
+    .map-overlay-buttons {
+        flex-direction: column;
+        width: calc(100% - 40px);
+        border-radius: 16px;
+    }
+}
+
+/* ============================================================================
+   CHARTS GRID LAYOUT - Full width first chart, 2 columns for others
+   ============================================================================ */
+.charts-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+}
+
+.chart-card.full-width {
+    grid-column: 1 / -1;
+}
+
+.charts-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2xl);
+}
+
+@media (max-width: 992px) {
+    .charts-row {
+        grid-template-columns: 1fr;
+    }
+}

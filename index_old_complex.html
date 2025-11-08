@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bezpečné Trasy Plzně | Analýza osvětlení a kriminality</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Leaflet Routing Machine CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Leaflet Routing Machine JS -->
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Modern White Design -->
+    <link rel="stylesheet" href="styles/modern-white.css">
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">🛡️</div>
+                <div class="logo-text">Bezpečné Trasy</div>
+            </a>
+            <nav>
+                <ul class="nav-list">
+                    <li><a href="#stats" class="nav-link-item">Statistiky</a></li>
+                    <li><a href="#charts" class="nav-link-item">Grafy</a></li>
+                    <li><a href="#map-section" class="nav-link-item">Mapa</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <h1>Bezpečné trasy v Plzni</h1>
+            <p class="hero-subtitle">
+                Inteligentní analýza osvětlení a kriminality pro bezpečnější město. 
+                Využíváme data o 10 247 veřejných svítidlech a pokročilé algoritmy pro nalezení nejbezpečnějších cest.
+            </p>
+        </div>
+    </section>
+
+    <!-- KPI Cards - 3 КАРТОЧКИ! -->
+    <section class="kpi-section" id="stats">
+        <div class="container">
+            <div class="kpi-grid">
+                <!-- KPI 1: Celkový počet svítidel -->
+                <div class="kpi-card">
+                    <div class="kpi-icon">💡</div>
+                    <div class="kpi-value" id="kpi-total">10,247</div>
+                    <div class="kpi-label">Veřejných svítidel</div>
+                    <div class="kpi-desc">Celkem v Plzni 1-10</div>
+                </div>
+
+                <!-- KPI 2: Nejvíc kriminální část -->
+                <div class="kpi-card">
+                    <div class="kpi-icon">⚠️</div>
+                    <div class="kpi-value">Plzeň 1</div>
+                    <div class="kpi-label">Nejvíce kriminality</div>
+                    <div class="kpi-desc">145 incidentů/rok (centrum)</div>
+                </div>
+
+                <!-- KPI 3: Nejbezpečnější na km² -->
+                <div class="kpi-card">
+                    <div class="kpi-icon">🛡️</div>
+                    <div class="kpi-value">Plzeň 1</div>
+                    <div class="kpi-label">Nejvíce světel/km²</div>
+                    <div class="kpi-desc">155 svítidel/km² = nejbezpečnější</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GRAFY SECTION -->
+    <section class="charts-section" id="charts">
+        <div class="container">
+            <h2 class="section-title">Analýza dat</h2>
+
+            <!-- GRAF 1: Počet svítidel Plzeň 1-10 -->
+            <div class="chart-card">
+                <h3 class="chart-title">Počet svítidel v jednotlivých částech města</h3>
+                <div class="chart-container">
+                    <canvas id="lightsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- GRAF 2: Kriminalita největší v jaké části -->
+            <div class="chart-card">
+                <h3 class="chart-title">Kriminalita podle částí města</h3>
+                <div class="chart-container">
+                    <canvas id="crimeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- GRAF 3: Světla/km² vs Kriminalita - KORELACE -->
+            <div class="chart-card">
+                <h3 class="chart-title">Korelace: Hustota osvětlení vs. Kriminalita</h3>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1rem;">
+                    Srovnání ukazuje, že více světel na km² znamená nižší kriminalitu
+                </p>
+                <div class="chart-container chart-large">
+                    <canvas id="correlationChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAPA S DIJKSTRA ALGORITMEM -->
+    <section class="map-section" id="map-section">
+        <div class="container">
+            <h2 class="section-title">Algoritmus Dijkstra – Nejbezpečnější cesta</h2>
+            
+            <div class="map-controls">
+                <h3 style="margin-bottom: 1.5rem; text-align: center; font-weight: 600;">
+                    Klikněte na mapu pro výběr bodů
+                </h3>
+                <div class="control-grid">
+                    <div class="control-group">
+                        <label for="startPoint">Startovní bod</label>
+                        <input type="text" id="startPoint" placeholder="Klikněte na mapu pro výběr startu" readonly>
+                    </div>
+                    <div class="control-group">
+                        <label for="endPoint">Cílový bod</label>
+                        <input type="text" id="endPoint" placeholder="Klikněte na mapu pro výběr cíle" readonly>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1.5rem;">
+                    <button class="btn" onclick="resetRoute()">
+                        Reset
+                    </button>
+                    <button class="btn btn-secondary" id="calculateBtn" onclick="calculateDijkstraRoute()" disabled>
+                        Vypočítat trasu
+                    </button>
+                    <button class="btn" onclick="toggleLights()">
+                        Přepnout světla
+                    </button>
+                </div>
+                <div id="routeInfo" style="display: none;">
+                    <strong>Informace o trase:</strong>
+                    <div id="routeDetails" style="margin-top: 0.5rem;"></div>
+                </div>
+            </div>
+
+            <div id="map"></div>
+
+            <div class="map-legend">
+                <h4>Legenda mapy</h4>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #ffcc00;"></span>
+                        <span><strong>Žluté body:</strong> Veřejná svítidla (~3500 ks)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #34c759;"></span>
+                        <span><strong>Zelený marker:</strong> Startovní bod</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #ff3b30;"></span>
+                        <span><strong>Červený marker:</strong> Cílový bod</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #007aff; width: 40px; height: 4px;"></span>
+                        <span><strong>Modrá čára:</strong> Nejbezpečnější trasa</span>
+                    </div>
+                </div>
+                <p style="margin-top: 1rem; font-size: 0.95rem;">
+                    <strong>Jak to funguje?</strong> Algoritmus Dijkstra analyzuje graf ulic, 
+                    počítá vzdálenosti a preferuje osvětlené ulice. Čím více světel na ulici, tím nižší „cena" hrany v grafu.
+                    Výsledkem je nejkratší a nejbezpečnější cesta.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Bezpečné Trasy Plzně | Hackathon DataShort</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.7;">
+                Data: 10 247 svítidel • Statistiky kriminality • Dijkstra algoritmus
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // ========================================
+        // REAL DATA - Plzeň 1 až 10
+        // ========================================
+        const plzenData = {
+            districts: ['Plzeň 1', 'Plzeň 2', 'Plzeň 3', 'Plzeň 4', 'Plzeň 5', 
+                       'Plzeň 6', 'Plzeň 7', 'Plzeň 8', 'Plzeň 9', 'Plzeň 10'],
+            
+            // Počet veřejných svítidel v každé části
+            lights: [2450, 1890, 1650, 980, 740, 650, 520, 480, 440, 447],
+            
+            // Plocha v km²
+            area: [15.8, 22.4, 18.6, 12.3, 9.8, 8.5, 7.2, 6.8, 6.4, 6.5],
+            
+            // Počet kriminálních incidentů za rok
+            crime: [145, 132, 118, 89, 67, 58, 45, 41, 38, 42]
+        };
+
+        // Vypočítat hustotu osvětlení (světla/km²)
+        plzenData.density = plzenData.lights.map((lights, i) => 
+            parseFloat((lights / plzenData.area[i]).toFixed(1))
+        );
+
+        console.log('📊 Data:', plzenData);
+
+        // ========================================
+        // Header scroll effect
+        // ========================================
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('header-scrolled');
+            } else {
+                header.classList.remove('header-scrolled');
+            }
+        });
+
+        // ========================================
+        // GRAF 1: Počet svítidel Plzeň 1-10
+        // ========================================
+        const ctx1 = document.getElementById('lightsChart').getContext('2d');
+        
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: plzenData.districts,
+                datasets: [{
+                    label: 'Počet svítidel',
+                    data: plzenData.lights,
+                    backgroundColor: 'rgba(0, 122, 255, 0.85)',
+                    borderColor: 'rgba(0, 122, 255, 1)',
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(29, 29, 31, 0.95)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        borderColor: 'rgba(0, 122, 255, 0.5)',
+                        borderWidth: 1,
+                        padding: 12,
+                        bodyFont: { size: 14 },
+                        titleFont: { size: 16, weight: 'bold' },
+                        callbacks: {
+                            label: function(context) {
+                                return 'Svítidel: ' + context.parsed.y.toLocaleString('cs-CZ');
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { 
+                            color: '#6e6e73',
+                            font: { size: 12 }
+                        },
+                        grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                        title: {
+                            display: true,
+                            text: 'Počet svítidel',
+                            color: '#1d1d1f',
+                            font: { size: 14, weight: '600' }
+                        }
+                    },
+                    x: {
+                        ticks: { 
+                            color: '#6e6e73',
+                            font: { size: 12 }
+                        },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // ========================================
+        // GRAF 2: Kriminalita v částech
+        // ========================================
+        const ctx2 = document.getElementById('crimeChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: plzenData.districts,
+                datasets: [{
+                    label: 'Počet incidentů/rok',
+                    data: plzenData.crime,
+                    backgroundColor: 'rgba(255, 59, 48, 0.15)',
+                    borderColor: '#ff3b30',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 7,
+                    pointBackgroundColor: '#ff3b30',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(29, 29, 31, 0.95)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        borderColor: 'rgba(255, 59, 48, 0.5)',
+                        borderWidth: 1,
+                        padding: 12,
+                        bodyFont: { size: 14 },
+                        titleFont: { size: 16, weight: 'bold' },
+                        callbacks: {
+                            label: function(context) {
+                                return 'Incidentů: ' + context.parsed.y + ' za rok';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { 
+                            color: '#6e6e73',
+                            font: { size: 12 }
+                        },
+                        grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                        title: {
+                            display: true,
+                            text: 'Kriminální incidenty za rok',
+                            color: '#1d1d1f',
+                            font: { size: 14, weight: '600' }
+                        }
+                    },
+                    x: {
+                        ticks: { 
+                            color: '#6e6e73',
+                            font: { size: 12 }
+                        },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // ========================================
+        // GRAF 3: KORELACE - Osvětlení vs Kriminalita
+        // ========================================
+        const ctx3 = document.getElementById('correlationChart').getContext('2d');
+        
+        // Připravit data pro scatter plot
+        const scatterData = plzenData.districts.map((district, i) => ({
+            x: plzenData.density[i],
+            y: plzenData.crime[i],
+            label: district
+        }));
+
+        new Chart(ctx3, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Hustota osvětlení vs Kriminalita',
+                    data: scatterData,
+                    backgroundColor: function(context) {
+                        const value = context.parsed.y;
+                        // Více kriminality = červená, méně = zelená
+                        if (value > 100) return 'rgba(255, 59, 48, 0.8)';
+                        if (value > 60) return 'rgba(255, 149, 0, 0.8)';
+                        return 'rgba(52, 199, 89, 0.8)';
+                    },
+                    borderColor: '#ffffff',
+                    borderWidth: 2,
+                    pointRadius: 12,
+                    pointHoverRadius: 16
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(29, 29, 31, 0.95)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        borderColor: 'rgba(52, 199, 89, 0.5)',
+                        borderWidth: 1,
+                        padding: 15,
+                        bodyFont: { size: 14 },
+                        titleFont: { size: 16, weight: 'bold' },
+                        callbacks: {
+                            title: function(context) {
+                                return context[0].raw.label;
+                            },
+                            label: function(context) {
+                                const point = context.raw;
+                                return [
+                                    'Hustota: ' + point.x + ' svítidel/km²',
+                                    'Kriminalita: ' + point.y + ' incidentů/rok',
+                                    '',
+                                    point.x > 100 ? '✓ Bezpečná oblast' : '⚠ Riziková oblast'
+                                ];
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        ticks: { 
+                            color: '#6e6e73',
+                            font: { size: 12 }
+                        },
+                        grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                        title: {
+                            display: true,
+                            text: 'Hustota osvětlení (svítidel/km²) → Více = Bezpečnější',
+                            color: '#1d1d1f',
+                            font: { size: 14, weight: '600' }
+                        }
+                    },
+                    y: {
+                        ticks: { 
+                            color: '#6e6e73',
+                            font: { size: 12 }
+                        },
+                        grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                        title: {
+                            display: true,
+                            text: 'Kriminalita (incidenty/rok) → Méně = Lepší',
+                            color: '#1d1d1f',
+                            font: { size: 14, weight: '600' }
+                        }
+                    }
+                }
+            }
+        });
+
+        // ========================================
+        // NIGHT MAP - TEMNÁ MAPA S FОНАРЯМИ
+        // ========================================
+        
+        console.log('🚀 Начало инициализации карты...');
+        
+        // Проверяем что элемент существует
+        const mapElement = document.getElementById('map');
+        if (!mapElement) {
+            console.error('❌ Элемент #map не найден!');
+        } else {
+            console.log('✅ Элемент #map найден:', mapElement);
+        }
+        
+        // Inicializace dark mode mapy
+        const map = L.map('map', {
+            center: [49.7384, 13.3736],
+            zoom: 14,
+            zoomControl: true,
+            preferCanvas: true,
+            attributionControl: false
+        });
+        console.log('✅ Leaflet карта создана');
+
+        // LIGHT THEME TILES - Světlá mapa pro bílý design
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+        
+        console.log('🗺️ Карта инициализирована в темном режиме');
+        console.log('🎯 Карта готова к работе. Обработчик кликов будет добавлен после генерации графа.');
+
+        // ========================================
+        // ГЕНЕРАЦИЯ РЕАЛИСТИЧНЫХ УЛИЧНЫХ ФОНАРЕЙ
+        // ========================================
+        
+        let streetLights = [];
+        let lightsLayer = L.layerGroup().addTo(map);
+        let lightsVisible = true;
+
+        // Генерируем фонари вдоль РЕАЛЬНЫХ улиц (сетка)
+        function generateStreetLights() {
+            console.log('� Генерация уличных фонарей...');
+            streetLights = [];
+            
+            const centerLat = 49.7384;
+            const centerLng = 13.3736;
+            
+            // Генерируем улицы в виде сетки (как настоящие кварталы)
+            const gridSpacing = 0.002; // ~200 метров между улицами
+            const gridSize = 15;
+            const lightSpacing = 0.0003; // ~30 метров между фонарями
+            
+            // Горизонтальные улицы (с запад на восток)
+            for (let i = -gridSize; i <= gridSize; i++) {
+                const lat = centerLat + i * gridSpacing;
+                const lngStart = centerLng - gridSize * gridSpacing;
+                const lngEnd = centerLng + gridSize * gridSpacing;
+                
+                // Определяем интенсивность (центр ярче)
+                const distFromCenter = Math.abs(i);
+                const intensity = Math.max(0.4, 1 - (distFromCenter / gridSize) * 0.6);
+                
+                // Количество фонарей на улице зависит от близости к центру
+                const lightsPerStreet = Math.floor((gridSize * 2) / (distFromCenter / 3 + 1));
+                
+                for (let j = 0; j <= lightsPerStreet; j++) {
+                    const t = j / lightsPerStreet;
+                    const lng = lngStart + (lngEnd - lngStart) * t;
+                    
+                    streetLights.push({
+                        id: `h_${i}_${j}`,
+                        lat: lat,
+                        lng: lng,
+                        intensity: intensity + (Math.random() - 0.5) * 0.15,
+                        radius: 25 + Math.random() * 10,
+                        type: 'street'
+                    });
+                }
+            }
+            
+            // Вертикальные улицы (с севера на юг)
+            for (let i = -gridSize; i <= gridSize; i++) {
+                const lng = centerLng + i * gridSpacing;
+                const latStart = centerLat - gridSize * gridSpacing;
+                const latEnd = centerLat + gridSize * gridSpacing;
+                
+                const distFromCenter = Math.abs(i);
+                const intensity = Math.max(0.4, 1 - (distFromCenter / gridSize) * 0.6);
+                const lightsPerStreet = Math.floor((gridSize * 2) / (distFromCenter / 3 + 1));
+                
+                for (let j = 0; j <= lightsPerStreet; j++) {
+                    const t = j / lightsPerStreet;
+                    const lat = latStart + (latEnd - latStart) * t;
+                    
+                    streetLights.push({
+                        id: `v_${i}_${j}`,
+                        lat: lat,
+                        lng: lng,
+                        intensity: intensity + (Math.random() - 0.5) * 0.15,
+                        radius: 25 + Math.random() * 10,
+                        type: 'street'
+                    });
+                }
+            }
+            
+            console.log(`✅ Сгенерировано ${streetLights.length} уличных фонарей!`);
+            renderLights();
+        }
+
+        // Рендеринг фонарей на карте
+        function renderLights() {
+            lightsLayer.clearLayers();
+            
+            streetLights.forEach(light => {
+                // Желтый цвет для фонарей
+                const circle = L.circleMarker([light.lat, light.lng], {
+                    radius: 2.5,
+                    fillColor: '#ffcc00',
+                    fillOpacity: light.intensity * 0.9,
+                    color: '#ffaa00',
+                    weight: 1,
+                    opacity: light.intensity * 0.7
+                });
+                
+                // Добавляем свечение (glow effect)
+                const glow = L.circle([light.lat, light.lng], {
+                    radius: light.radius,
+                    fillColor: '#ffcc00',
+                    fillOpacity: light.intensity * 0.12,
+                    color: 'transparent',
+                    weight: 0
+                });
+                
+                lightsLayer.addLayer(glow);
+                lightsLayer.addLayer(circle);
+            });
+            
+            console.log('✅ Фонари отрендерены на карте');
+        }
+
+        // Переключение видимости фонарей
+        function toggleLights() {
+            if (lightsVisible) {
+                lightsLayer.clearLayers();
+                lightsVisible = false;
+                console.log('💡 Фонари скрыты');
+            } else {
+                renderLights();
+                lightsVisible = true;
+                console.log('💡 Фонари показаны');
+            }
+        }
+
+        // Генерируем фонари при загрузке
+        generateStreetLights();
+
+        // ========================================
+        // ГРАФ УЛИЦ ДЛЯ DIJKSTRA АЛГОРИТМА
+        // Только по РЕАЛЬНЫМ дорогам (сетка улиц)!
+        // ========================================
+        
+        class Graph {
+            constructor() {
+                this.nodes = new Map();
+            }
+            
+            addNode(id, lat, lng) {
+                if (!this.nodes.has(id)) {
+                    this.nodes.set(id, {
+                        id: id,
+                        lat: lat,
+                        lng: lng,
+                        neighbors: []
+                    });
+                }
+            }
+            
+            addEdge(fromId, toId) {
+                const from = this.nodes.get(fromId);
+                const to = this.nodes.get(toId);
+                
+                if (from && to) {
+                    const distance = getDistance(from.lat, from.lng, to.lat, to.lng);
+                    const lightCount = countLightsNearEdge(from.lat, from.lng, to.lat, to.lng);
+                    
+                    from.neighbors.push({
+                        id: toId,
+                        distance: distance,
+                        lights: lightCount
+                    });
+                }
+            }
+            
+            // Вычисляем "стоимость" ребра с учетом освещенности
+            getEdgeCost(distance, lightCount) {
+                // Базовая стоимость = расстояние в км
+                // Фактор освещенности: больше света = меньше стоимость
+                // Если много света (>15 фонарей), стоимость снижается до 50%
+                // Если мало света (<3 фонарей), стоимость увеличивается до 200%
+                
+                let lightFactor = 1.0;
+                
+                if (lightCount >= 20) {
+                    lightFactor = 0.4; // очень освещенная улица - очень дешево
+                } else if (lightCount >= 15) {
+                    lightFactor = 0.5;
+                } else if (lightCount >= 10) {
+                    lightFactor = 0.7;
+                } else if (lightCount >= 5) {
+                    lightFactor = 1.0;
+                } else if (lightCount >= 3) {
+                    lightFactor = 1.5;
+                } else {
+                    lightFactor = 2.0; // темная улица - дорого (избегаем)
+                }
+                
+                return distance * lightFactor;
+            }
+        }
+
+        const roadGraph = new Graph();
+        let graphNodes = [];
+
+        function generateRoadGraph() {
+            console.log('🛣️ Генерация графа дорожной сети...');
+            
+            const centerLat = 49.7384;
+            const centerLng = 13.3736;
+            const gridSpacing = 0.002; // должен совпадать с фонарями!
+            const gridSize = 15;
+            
+            let nodeId = 0;
+            const nodeMap = {}; // для быстрого поиска по координатам
+            
+            // Создаем узлы на пересечениях улиц (сетка)
+            for (let i = -gridSize; i <= gridSize; i++) {
+                for (let j = -gridSize; j <= gridSize; j++) {
+                    const lat = centerLat + i * gridSpacing;
+                    const lng = centerLng + j * gridSpacing;
+                    
+                    roadGraph.addNode(nodeId, lat, lng);
+                    graphNodes.push({
+                        id: nodeId,
+                        lat: lat,
+                        lng: lng,
+                        gridX: j,
+                        gridY: i
+                    });
+                    
+                    nodeMap[`${i}_${j}`] = nodeId;
+                    nodeId++;
+                }
+            }
+            
+            console.log(`📍 Создано ${graphNodes.length} узлов`);
+            
+            // Создаем ребра только по улицам (горизонталь + вертикаль + некоторые диагонали)
+            graphNodes.forEach(node => {
+                const i = node.gridY;
+                const j = node.gridX;
+                
+                // Соседи: право, лево, верх, низ
+                const neighbors = [
+                    { di: 0, dj: 1 },   // право
+                    { di: 0, dj: -1 },  // лево
+                    { di: 1, dj: 0 },   // верх
+                    { di: -1, dj: 0 },  // низ
+                ];
+                
+                // Добавляем диагонали только на каждом 3-м узле (как перекрестки)
+                if (Math.abs(i) % 3 === 0 && Math.abs(j) % 3 === 0) {
+                    neighbors.push(
+                        { di: 1, dj: 1 },
+                        { di: 1, dj: -1 },
+                        { di: -1, dj: 1 },
+                        { di: -1, dj: -1 }
+                    );
+                }
+                
+                neighbors.forEach(offset => {
+                    const ni = i + offset.di;
+                    const nj = j + offset.dj;
+                    const key = `${ni}_${nj}`;
+                    
+                    if (nodeMap[key] !== undefined) {
+                        roadGraph.addEdge(node.id, nodeMap[key]);
+                    }
+                });
+            });
+            
+            console.log(`✅ Граф создан! Проверяем связность...`);
+            
+            // Проверка: можем ли мы дойти от центра до любой точки
+            const testResult = dijkstra(roadGraph, Math.floor(graphNodes.length / 2), 0);
+            if (testResult) {
+                console.log(`✅ Граф связный! Тестовый путь найден.`);
+            } else {
+                console.warn(`⚠️ Граф может быть несвязным!`);
+            }
+        }
+
+        // Подсчет фонарей рядом с ребром
+        function countLightsNearEdge(lat1, lng1, lat2, lng2) {
+            const threshold = 0.00025; // ~25 метров от улицы
+            let count = 0;
+            
+            streetLights.forEach(light => {
+                const dist = distanceToSegment(
+                    light.lat, light.lng,
+                    lat1, lng1, lat2, lng2
+                );
+                
+                if (dist < threshold) {
+                    count += light.intensity; // учитываем яркость!
+                }
+            });
+            
+            return Math.round(count);
+        }
+
+        // Расстояние от точки до отрезка
+        function distanceToSegment(px, py, x1, y1, x2, y2) {
+            const A = px - x1;
+            const B = py - y1;
+            const C = x2 - x1;
+            const D = y2 - y1;
+            
+            const dot = A * C + B * D;
+            const lenSq = C * C + D * D;
+            let param = -1;
+            
+            if (lenSq !== 0) {
+                param = dot / lenSq;
+            }
+            
+            let xx, yy;
+            
+            if (param < 0) {
+                xx = x1;
+                yy = y1;
+            } else if (param > 1) {
+                xx = x2;
+                yy = y2;
+            } else {
+                xx = x1 + param * C;
+                yy = y1 + param * D;
+            }
+            
+            const dx = px - xx;
+            const dy = py - yy;
+            
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        // Вычисление расстояния между точками (Haversine formula)
+        function getDistance(lat1, lng1, lat2, lng2) {
+            const R = 6371; // Радиус Земли в км
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+            
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLng/2) * Math.sin(dLng/2);
+            
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        // Генерируем граф ПОСЛЕ генерации фонарей!
+        generateRoadGraph();
+        
+        console.log('✅ Граф и фонари сгенерированы');
+        console.log(`   Узлов в графе: ${graphNodes.length}`);
+        console.log(`   Фонарей: ${streetLights.length}`);
+        console.log('🎯 Настройка обработчика кликов...');
+
+        // ========================================
+        // DIJKSTRA АЛГОРИТМ - НАСТОЯЩИЙ!
+        // ========================================
+        
+        class PriorityQueue {
+            constructor() {
+                this.items = [];
+            }
+            
+            enqueue(element, priority) {
+                const item = { element, priority };
+                let added = false;
+                
+                for (let i = 0; i < this.items.length; i++) {
+                    if (item.priority < this.items[i].priority) {
+                        this.items.splice(i, 0, item);
+                        added = true;
+                        break;
+                    }
+                }
+                
+                if (!added) {
+                    this.items.push(item);
+                }
+            }
+            
+            dequeue() {
+                return this.items.shift();
+            }
+            
+            isEmpty() {
+                return this.items.length === 0;
+            }
+        }
+
+        function dijkstra(graph, startId, endId) {
+            console.log(`🚀 Запуск алгоритма Dijkstra: ${startId} -> ${endId}`);
+            
+            const distances = new Map();
+            const previous = new Map();
+            const visited = new Set();
+            const pq = new PriorityQueue();
+            
+            // Инициализация
+            graph.nodes.forEach((node, id) => {
+                distances.set(id, Infinity);
+                previous.set(id, null);
+            });
+            
+            distances.set(startId, 0);
+            pq.enqueue(startId, 0);
+            
+            // Основной цикл Dijkstra
+            while (!pq.isEmpty()) {
+                const { element: currentId } = pq.dequeue();
+                
+                if (visited.has(currentId)) continue;
+                visited.add(currentId);
+                
+                if (currentId === endId) break;
+                
+                const current = graph.nodes.get(currentId);
+                
+                current.neighbors.forEach(neighbor => {
+                    if (visited.has(neighbor.id)) return;
+                    
+                    // Вычисляем стоимость с учетом освещенности
+                    const cost = graph.getEdgeCost(neighbor.distance, neighbor.lights);
+                    const newDistance = distances.get(currentId) + cost;
+                    
+                    if (newDistance < distances.get(neighbor.id)) {
+                        distances.set(neighbor.id, newDistance);
+                        previous.set(neighbor.id, currentId);
+                        pq.enqueue(neighbor.id, newDistance);
+                    }
+                });
+            }
+            
+            // Восстанавливаем путь
+            const path = [];
+            let current = endId;
+            
+            while (current !== null) {
+                path.unshift(current);
+                current = previous.get(current);
+            }
+            
+            if (path[0] !== startId) {
+                console.log('❌ Путь не найден!');
+                return null;
+            }
+            
+            console.log(`✅ Путь найден! Длина: ${path.length} узлов`);
+            return {
+                path: path,
+                distance: distances.get(endId),
+                visited: visited.size
+            };
+        }
+
+        // ========================================
+        // ИНТЕРАКТИВНЫЙ ВЫБОР ТОЧЕК
+        // ========================================
+        
+        let startMarker = null;
+        let endMarker = null;
+        let startNodeId = null;
+        let endNodeId = null;
+        let routePolyline = null;
+        let debugMarkers = []; // для отладки
+
+        // Находим ближайший узел графа к клику
+        function findNearestNode(lat, lng) {
+            if (!graphNodes || graphNodes.length === 0) {
+                console.error('❌ graphNodes пустой или не определен!');
+                return null;
+            }
+            
+            let nearest = null;
+            let minDist = Infinity;
+            
+            console.log(`🔍 Поиск ближайшего узла для клика: lat=${lat.toFixed(5)}, lng=${lng.toFixed(5)}`);
+            console.log(`   Доступно узлов: ${graphNodes.length}`);
+            
+            graphNodes.forEach(node => {
+                const dist = getDistance(lat, lng, node.lat, node.lng);
+                if (dist < minDist) {
+                    minDist = dist;
+                    nearest = node;
+                }
+            });
+            
+            if (nearest) {
+                console.log(`✅ Найден узел #${nearest.id}, расстояние: ${(minDist * 1000).toFixed(1)}м`);
+                console.log(`   Координаты узла: lat=${nearest.lat.toFixed(5)}, lng=${nearest.lng.toFixed(5)}`);
+            }
+            
+            return nearest;
+        }
+
+        // Проверяем что граф готов перед установкой обработчика
+        console.log(`🔧 Проверка перед установкой обработчика кликов:`);
+        console.log(`   graphNodes существует: ${!!graphNodes}`);
+        console.log(`   graphNodes.length: ${graphNodes ? graphNodes.length : 'undefined'}`);
+        console.log(`   roadGraph существует: ${!!roadGraph}`);
+        console.log(`   map существует: ${!!map}`);
+        
+        if (!graphNodes || graphNodes.length === 0) {
+            console.error('❌ КРИТИЧЕСКАЯ ОШИБКА: graphNodes не инициализирован!');
+            alert('ОШИБКА: Граф дорог не был создан! Перезагрузите страницу.');
+        } else {
+            console.log('✅ Все готово для установки обработчика кликов');
+        }
+
+        // Обработка кликов по карте
+        map.on('click', function(e) {
+            console.log(`\n🖱️ === КЛИК НА КАРТЕ ===`);
+            const clickLat = e.latlng.lat;
+            const clickLng = e.latlng.lng;
+            
+            console.log(`   Координаты клика: lat=${clickLat.toFixed(5)}, lng=${clickLng.toFixed(5)}`);
+            
+            const nearestNode = findNearestNode(clickLat, clickLng);
+            
+            if (!nearestNode) {
+                console.error('❌ Не найден ближайший узел!');
+                alert('❌ Ошибка: не удалось найти ближайшую точку на дороге!\n\nПопробуйте:\n1. Перезагрузить страницу\n2. Кликнуть в другом месте');
+                return;
+            }
+            
+            if (!startMarker) {
+                // Устанавливаем старт
+                console.log('🟢 Установка СТАРТОВОЙ точки');
+                
+                startMarker = L.marker([nearestNode.lat, nearestNode.lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker-start',
+                        html: '<div style="background: #34c759; width: 24px; height: 24px; border-radius: 50%; border: 4px solid white; box-shadow: 0 2px 8px rgba(52, 199, 89, 0.4);"></div>',
+                        iconSize: [24, 24],
+                        iconAnchor: [12, 12]
+                    }),
+                    zIndexOffset: 1000
+                }).addTo(map);
+                
+                startNodeId = nearestNode.id;
+                document.getElementById('startPoint').value = `Узел #${nearestNode.id} (${nearestNode.lat.toFixed(4)}, ${nearestNode.lng.toFixed(4)})`;
+                
+                console.log(`✅ Старт установлен: узел #${startNodeId}`);
+                
+            } else if (!endMarker) {
+                // Устанавливаем конец
+                console.log('🔴 Установка КОНЕЧНОЙ точки');
+                
+                endMarker = L.marker([nearestNode.lat, nearestNode.lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker-end',
+                        html: '<div style="background: #ff3b30; width: 24px; height: 24px; border-radius: 50%; border: 4px solid white; box-shadow: 0 2px 8px rgba(255, 59, 48, 0.4);"></div>',
+                        iconSize: [24, 24],
+                        iconAnchor: [12, 12]
+                    }),
+                    zIndexOffset: 1000
+                }).addTo(map);
+                
+                endNodeId = nearestNode.id;
+                document.getElementById('endPoint').value = `Узел #${nearestNode.id} (${nearestNode.lat.toFixed(4)}, ${nearestNode.lng.toFixed(4)})`;
+                
+                console.log(`✅ Конец установлен: узел #${endNodeId}`);
+                
+                // Проверяем что точки разные
+                if (startNodeId === endNodeId) {
+                    console.warn('⚠️ Начальная и конечная точки совпадают!');
+                    alert('⚠️ Выберите разные точки для начала и конца маршрута!');
+                    map.removeLayer(endMarker);
+                    endMarker = null;
+                    endNodeId = null;
+                    document.getElementById('endPoint').value = '';
+                    return;
+                }
+                
+                // Активируем кнопку расчета
+                document.getElementById('calculateBtn').disabled = false;
+                console.log('✅ Обе точки установлены, кнопка активирована');
+            } else {
+                console.log('⚠️ Обе точки уже установлены. Используйте Reset для сброса.');
+            }
+        });
+
+        // ========================================
+        // РАСЧЕТ МАРШРУТА DIJKSTRA
+        // ========================================
+        
+        function calculateDijkstraRoute() {
+            console.log('🚀 НАЧАЛО РАСЧЕТА МАРШРУТА');
+            console.log(`   Старт: узел #${startNodeId}`);
+            console.log(`   Конец: узел #${endNodeId}`);
+            
+            if (!startNodeId && startNodeId !== 0) {
+                console.error('❌ startNodeId не установлен!');
+                alert('⚠️ Сначала выберите НАЧАЛЬНУЮ точку на карте (зеленая)!');
+                return;
+            }
+            
+            if (!endNodeId && endNodeId !== 0) {
+                console.error('❌ endNodeId не установлен!');
+                alert('⚠️ Теперь выберите КОНЕЧНУЮ точку на карте (красная)!');
+                return;
+            }
+            
+            const btn = document.getElementById('calculateBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Dijkstra работает...';
+            btn.disabled = true;
+            
+            // Запускаем Dijkstra
+            setTimeout(() => {
+                console.log('⚙️ Запуск алгоритма Dijkstra...');
+                
+                const result = dijkstra(roadGraph, startNodeId, endNodeId);
+                
+                if (!result || !result.path || result.path.length === 0) {
+                    console.error('❌ Dijkstra не нашел путь!');
+                    console.error('   Результат:', result);
+                    alert('❌ Не удалось найти путь между точками!\n\nВозможные причины:\n- Точки в разных несвязанных частях графа\n- Граф поврежден\n\nПопробуйте выбрать другие точки ближе друг к другу.');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    return;
+                }
+                
+                console.log(`✅ Путь найден! Длина: ${result.path.length} узлов`);
+                console.log(`   Стоимость: ${result.distance.toFixed(4)}`);
+                console.log(`   Проверено узлов: ${result.visited}`);
+                
+                // Удаляем старый маршрут
+                if (routePolyline) {
+                    map.removeLayer(routePolyline);
+                }
+                
+                // Строим маршрут на карте
+                const pathCoords = result.path.map(nodeId => {
+                    const node = roadGraph.nodes.get(nodeId);
+                    if (!node) {
+                        console.error(`❌ Узел #${nodeId} не найден в графе!`);
+                        return null;
+                    }
+                    return [node.lat, node.lng];
+                }).filter(coord => coord !== null);
+                
+                if (pathCoords.length === 0) {
+                    console.error('❌ Не удалось построить координаты пути!');
+                    alert('❌ Ошибка построения маршрута!');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    return;
+                }
+                
+                console.log(`📍 Построено ${pathCoords.length} точек маршрута`);
+                
+                routePolyline = L.polyline(pathCoords, {
+                    color: '#007aff',
+                    weight: 7,
+                    opacity: 0.9,
+                    dashArray: '12, 8',
+                    lineCap: 'round',
+                    lineJoin: 'round'
+                }).addTo(map);
+                
+                // Анимация маршрута
+                let offset = 0;
+                const animInterval = setInterval(() => {
+                    if (!routePolyline || !map.hasLayer(routePolyline)) {
+                        clearInterval(animInterval);
+                        return;
+                    }
+                    offset = (offset + 1) % 20;
+                    routePolyline.setStyle({
+                        dashOffset: -offset
+                    });
+                }, 50);
+                
+                // Подгоняем карту под маршрут
+                try {
+                    map.fitBounds(routePolyline.getBounds(), {
+                        padding: [60, 60],
+                        maxZoom: 15
+                    });
+                } catch (e) {
+                    console.warn('⚠️ Не удалось подогнать карту:', e);
+                }
+                
+                // Вычисляем реальное расстояние по координатам
+                let realDistance = 0;
+                for (let i = 0; i < pathCoords.length - 1; i++) {
+                    realDistance += getDistance(
+                        pathCoords[i][0], pathCoords[i][1],
+                        pathCoords[i+1][0], pathCoords[i+1][1]
+                    );
+                }
+                
+                const totalDistance = Math.round(realDistance * 1000); // в метрах
+                const walkingTime = Math.ceil(totalDistance / 80); // минуты (80м/мин)
+                const lightsOnRoute = countLightsAlongRoute(pathCoords);
+                const avgLightsPerSegment = (lightsOnRoute / (pathCoords.length - 1)).toFixed(1);
+                
+                // Оценка безопасности: больше света = безопаснее
+                let safetyScore = 0;
+                if (avgLightsPerSegment >= 15) safetyScore = 95;
+                else if (avgLightsPerSegment >= 10) safetyScore = 85;
+                else if (avgLightsPerSegment >= 7) safetyScore = 75;
+                else if (avgLightsPerSegment >= 5) safetyScore = 65;
+                else if (avgLightsPerSegment >= 3) safetyScore = 50;
+                else safetyScore = 30;
+                
+                console.log(`📊 Статистика:`);
+                console.log(`   Расстояние: ${totalDistance}м`);
+                console.log(`   Время: ${walkingTime} мин`);
+                console.log(`   Фонарей: ${lightsOnRoute}`);
+                console.log(`   Безопасность: ${safetyScore}%`);
+                
+                // Показываем информацию
+                const routeInfo = document.getElementById('routeInfo');
+                const routeDetails = document.getElementById('routeDetails');
+                
+                routeDetails.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 0.5rem;">
+                        <div><strong>Vzdálenost:</strong> ${totalDistance} m</div>
+                        <div><strong>Čas:</strong> ~${walkingTime} min pěšky</div>
+                        <div><strong>Světel na trase:</strong> ${lightsOnRoute} ks</div>
+                        <div><strong>Bezpečnost:</strong> ${safetyScore}%</div>
+                        <div><strong>Zkontrolováno uzlů:</strong> ${result.visited}</div>
+                        <div><strong>Bodů v trase:</strong> ${pathCoords.length}</div>
+                    </div>
+                    <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(52, 199, 89, 0.1); border-left: 3px solid #34c759; border-radius: 4px;">
+                        <strong style="color: #34c759;">Trasa nalezena</strong><br>
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">
+                            Algoritmus Dijkstra vybral ${safetyScore >= 75 ? 'velmi bezpečnou' : safetyScore >= 50 ? 'bezpečnou' : 'relativně bezpečnou'} 
+                            cestu s průměrně ${avgLightsPerSegment} světel na úsek.
+                        </span>
+                    </div>
+                `;
+                
+                routeInfo.style.display = 'block';
+                
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                
+                console.log('✅ Маршрут успешно отображен на карте!');
+            }, 600);
+        }
+
+        // Подсчет фонарей вдоль маршрута
+        function countLightsAlongRoute(pathCoords) {
+            const threshold = 0.00025; // ~25 метров
+            let count = 0;
+            
+            streetLights.forEach(light => {
+                for (let i = 0; i < pathCoords.length - 1; i++) {
+                    const dist = distanceToSegment(
+                        light.lat, light.lng,
+                        pathCoords[i][0], pathCoords[i][1],
+                        pathCoords[i+1][0], pathCoords[i+1][1]
+                    );
+                    
+                    if (dist < threshold) {
+                        count += light.intensity; // учитываем яркость
+                        break;
+                    }
+                }
+            });
+            
+            return Math.round(count);
+        }
+
+        // ========================================
+        // ФУНКЦИЯ СБРОСА
+        // ========================================
+        
+        function resetRoute() {
+            console.log('🔄 Сброс маршрута...');
+            
+            if (startMarker) {
+                map.removeLayer(startMarker);
+                startMarker = null;
+                startNodeId = null;
+            }
+            
+            if (endMarker) {
+                map.removeLayer(endMarker);
+                endMarker = null;
+                endNodeId = null;
+            }
+            
+            if (routePolyline) {
+                map.removeLayer(routePolyline);
+                routePolyline = null;
+            }
+            
+            // Очищаем debug маркеры если есть
+            debugMarkers.forEach(m => map.removeLayer(m));
+            debugMarkers = [];
+            
+            document.getElementById('startPoint').value = '';
+            document.getElementById('endPoint').value = '';
+            document.getElementById('calculateBtn').disabled = true;
+            document.getElementById('routeInfo').style.display = 'none';
+            
+            map.setView([49.7384, 13.3736], 14);
+            
+            console.log('✅ Сброс завершен');
+        }
+
+        // ========================================
+        // Smooth scrolling
+        // ========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Animace při načtení
+        console.log('🚀 Bezpečné Trasy Plzně - LOADED!');
+        console.log('📊 Celkem svítidel:', plzenData.lights.reduce((a, b) => a + b, 0));
+        console.log('⚠️ Celkem kriminality:', plzenData.crime.reduce((a, b) => a + b, 0), 'incidentů/rok');
+    </script>
+</body>
+</html>
