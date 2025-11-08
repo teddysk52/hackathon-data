@@ -1075,3 +1075,226 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+/* ============================================================================
+   MOBILE RESPONSIVE - Полная адаптация под мобилку
+   ============================================================================ */
+
+/* Tablet - 768px and below */
+@media (max-width: 768px) {
+    /* Header */
+    .header-container {
+        padding: 1rem;
+    }
+    
+    .logo-text {
+        font-size: 1.2rem;
+    }
+    
+    nav ul {
+        display: none; /* Hide nav on mobile, можно добавить бургер-меню */
+    }
+    
+    /* Hero Section */
+    .hero {
+        padding: 3rem 0;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    /* KPI Cards - Stack vertically */
+    .kpi-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+    
+    .kpi-card {
+        padding: 2rem;
+    }
+    
+    .kpi-value {
+        font-size: 2rem;
+    }
+    
+    /* Charts */
+    .charts-section {
+        padding: 0 1rem;
+        margin: 3rem auto;
+    }
+    
+    .chart-card {
+        padding: 1.5rem;
+    }
+    
+    .chart-title {
+        font-size: 1.3rem;
+    }
+    
+    .chart-container {
+        height: 300px !important;
+    }
+    
+    /* Map Controls */
+    .map-overlay-controls {
+        max-width: calc(100% - 20px);
+        left: 10px;
+        right: 10px;
+        padding: 1rem;
+    }
+    
+    .map-overlay-controls h3 {
+        font-size: 1.1rem;
+    }
+    
+    .map-overlay-buttons {
+        bottom: 20px;
+        left: 10px;
+        right: 10px;
+        width: calc(100% - 20px);
+        gap: 0.5rem;
+    }
+    
+    .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+    
+    /* Footer */
+    footer h3 {
+        font-size: 1.5rem;
+    }
+    
+    footer p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Mobile - 480px and below */
+@media (max-width: 480px) {
+    /* Hero */
+    .hero h1 {
+        font-size: 1.6rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    /* KPI Cards */
+    .kpi-icon {
+        font-size: 2rem;
+        width: 60px;
+        height: 60px;
+    }
+    
+    .kpi-value {
+        font-size: 1.6rem;
+    }
+    
+    .kpi-label {
+        font-size: 0.9rem;
+    }
+    
+    .kpi-desc {
+        font-size: 0.8rem;
+    }
+    
+    /* Charts */
+    .chart-title {
+        font-size: 1.1rem;
+    }
+    
+    .chart-title i {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+    
+    .chart-card p {
+        font-size: 0.85rem;
+    }
+    
+    /* Map Controls - Compact */
+    .map-overlay-controls {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        max-width: calc(100% - 20px);
+    }
+    
+    .map-overlay-controls label {
+        font-size: 0.85rem;
+    }
+    
+    .map-overlay-controls input {
+        font-size: 0.85rem;
+        padding: 0.5rem;
+    }
+    
+    .map-overlay-buttons {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .map-overlay-buttons .btn {
+        flex: 1 1 auto;
+        min-width: calc(50% - 0.25rem);
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+    
+    /* Route Info - Compact */
+    #routeDetails {
+        font-size: 0.8rem !important;
+    }
+    
+    #routeDetails > div {
+        grid-template-columns: 1fr !important;
+        gap: 0.5rem !important;
+    }
+    
+    /* Footer */
+    footer {
+        padding: 2rem 1rem;
+    }
+    
+    footer h3 {
+        font-size: 1.3rem;
+    }
+    
+    footer p {
+        font-size: 0.85rem;
+    }
+}
+
+/* Extra small devices - 360px and below */
+@media (max-width: 360px) {
+    .hero h1 {
+        font-size: 1.4rem;
+    }
+    
+    .kpi-card {
+        padding: 1.5rem;
+    }
+    
+    .chart-card {
+        padding: 1rem;
+    }
+    
+    .chart-container {
+        height: 250px !important;
+    }
+    
+    .map-overlay-buttons .btn {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+    }
+}
+
